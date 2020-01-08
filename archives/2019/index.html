@@ -48,20 +48,15 @@
   };
 </script>
 
-  <meta name="description" content="hello，这是我的第一个博客。  因为之前早就把springboot在使用层面学完了，最近打算将springboot的一些特性原理以及核心源码再次学习一遍，所谓知其然知其所以然。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Spring一些理解">
-<meta property="og:url" content="http://yoursite.com/2020/01/05/SpringBoot%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="zhuzhu&#39;blogs">
+<meta property="og:url" content="http://yoursite.com/archives/2019/index.html">
 <meta property="og:site_name" content="zhuzhu&#39;blogs">
-<meta property="og:description" content="hello，这是我的第一个博客。  因为之前早就把springboot在使用层面学完了，最近打算将springboot的一些特性原理以及核心源码再次学习一遍，所谓知其然知其所以然。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-05T14:26:03.000Z">
-<meta property="article:modified_time" content="2020-01-05T15:11:18.643Z">
 <meta property="article:author" content="zhuzhu">
-<meta property="article:tag" content="Spring">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2020/01/05/SpringBoot%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/">
+<link rel="canonical" href="http://yoursite.com/archives/2019/">
 
 
 <script id="page-configurations">
@@ -69,11 +64,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: true
+    isPost: false
   };
 </script>
 
-  <title>Spring一些理解 | zhuzhu'blogs</title>
+  <title>归档 | zhuzhu'blogs</title>
   
 
 
@@ -186,98 +181,49 @@
           <div class="content">
             
 
-  <div class="posts-expand">
-      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/05/SpringBoot%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/zhuzhu.jpeg">
-      <meta itemprop="name" content="zhuzhu">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zhuzhu'blogs">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          Spring一些理解
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-01-05 22:26:03 / 修改时间：23:11:18" itemprop="dateCreated datePublished" datetime="2020-01-05T22:26:03+08:00">2020-01-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/SpringBoot/" itemprop="url" rel="index">
-                    <span itemprop="name">SpringBoot</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+  
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <span class="collection-header">嗯..! 目前共计 4 篇日志。 继续努力。</span>
+      </div>
 
       
-        <p>  hello，这是我的第一个博客。<br>  因为之前早就把springboot在使用层面学完了，最近打算将springboot的一些特性原理以及核心源码再次学习一遍，所谓知其然知其所以然。</p>
-<a id="more"></a>
-<p>  当然spring十分强大，这些代码要完成任务需要很多琐碎的类实现，比如读取某个包下面的所有类，解析class的头文件,反射各种信息，再加上封装，很有可能在读源码的过程中掉到各种细节里出不来，大家读源码不用事无巨细，理解原理即可，官方文档是最好的老师。<br>  第一篇就把自己所理解的spring原理记录一下。</p>
-<p>  spring基本原理其实就是通过反射解析类及其类的各种信息，包括构造器、方法及其参数，属性。然后将其封装成bean定义信息类、constructor信息类、method信息类、property信息类，最终放在一个map里，也就是所谓的container，池等等，其实就是个map。当你写好配置文件，启动项目后，框架会先按照你的配置文件找到那个要扫描的包，然后解析包里面的所有类，找到所有含有@bean，@service等注解的类，利用反射解析它们，包括解析构造器，方法，属性等等，然后封装成各种信息类放到一个map里。每当你需要一个bean的时候，框架就会从container找是不是有这个类的定义啊？如果找到则通过构造器new出来（这就是控制反转，不用你new,框架帮你new），再在这个类找是不是有要注入的属性或者方法，比如标有@autowired的属性，如果有则还是到container找对应的解析类，new出对象，并通过之前解析出来的信息类找到setter方法，然后用该方法注入对象（这就是依赖注入）。如果其中有一个类container里没找到，则抛出异常，比如常见的spring无法找到该类定义异常。还有就是嵌套bean则用了一下递归，container会放到servletcontext里面，每次reQuest从servletcontext找这个container即可，不用多次解析类定义。如果bean的类型范围是单例，则会重用这个bean不再重新创建，将这个bean放到一个map里，每次用都先从这个map里面找。如果类型范围是session，则该bean会放到session里面。</p>
-
+    <div class="collection-year">
+      <h1 class="collection-header">2019</h1>
     </div>
 
-    
-    
-    
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
 
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/Spring/" rel="tag"># Spring</a>
-          </div>
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2019-12-31T11:32:58+08:00"
+              content="2019-12-31">
+          12-31
+        </time>
+      </div>
 
-        
+      <h2 class="post-title">
+          <a class="post-title-link" href="/2019/12/31/hello/" itemprop="url">
+            <span itemprop="name">hello</span>
+          </a>
+      </h2>
 
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/01/05/%E6%B3%A8%E8%A7%A3-SpringApplication/" rel="prev" title="注解@SpringApplication">
-      <i class="fa fa-chevron-left"></i> 注解@SpringApplication
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/01/07/MapStruct/" rel="next" title="MapStruct">
-      MapStruct <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
+    </header>
   </article>
+
+
+    </div>
+  </div>
   
   
   
 
-  </div>
+  
+
 
 
           </div>
