@@ -186,6 +186,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/08/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%B7%B1%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/zhuzhu.jpeg">
+      <meta itemprop="name" content="zhuzhu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zhuzhu'blogs">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/08/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%B7%B1%E6%9E%90/" class="post-title-link" itemprop="url">动态代理深析</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-01-08 20:38:45 / 修改时间：20:49:46" itemprop="dateCreated datePublished" datetime="2020-01-08T20:38:45+08:00">2020-01-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这几天看源码的过程中发现动态代理用得非常多。在Spring项目中用的注解，例如依赖注入的@Bean、@Autowired，事务注解@Transactional等都有用到，就是Srping的AOP（切面编程）。之前虽然是学过，但是感觉从来没用过，很模糊，所以就有了这篇文章</p>
+<p>代理可以让调用者和实现者之间解耦，例如RPC调用，对于我们调用者来说我就是想对用远程的那个方法，对于内部寻址啊，序列化反序列化等等这些交给代理来就行了</p>
+<ol>
+<li>jdk自带的动态代理<br>接口：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHelloWorld</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+实现类：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorldImpl</span> <span class="keyword">implements</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHelloWorld</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello world"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+实例：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JDKProxyExample</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">    <span class="comment">//真实对象</span></span><br><span class="line">    <span class="keyword">private</span> Object target = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//建立代理对象与真实对象的代理关系，并返回代理对象</span></span><br><span class="line">    <span class="comment">//三个参数1.类加载器 2.接口 3.this表示当前对象，</span></span><br><span class="line">    <span class="comment">// 它必须实现InvocationHandler接口的方法，它就是代理逻辑方法的实现</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">blind</span><span class="params">(Object target)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.target = target;</span><br><span class="line">        System.out.println(target.getClass().getClassLoader());</span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), <span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//三个参数1.代理对象 bind生成的对象 2.当前调度的方法 3.调度方法的参数</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"进入代理逻辑方法"</span>);</span><br><span class="line">        System.out.println(<span class="string">"在调度真是对象之前的服务"</span>);</span><br><span class="line">        Object obj = method.invoke(target, args);</span><br><span class="line">        System.out.println(<span class="string">"在调度真实对象之后的服务"</span>);</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//测试代码：</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testJdkProxy</span><span class="params">()</span></span>&#123;</span><br><span class="line">        JDKProxyExample jdkProxyExample = <span class="keyword">new</span> JDKProxyExample();</span><br><span class="line">        <span class="comment">//绑定关系</span></span><br><span class="line">        HelloWorld proxy = (HelloWorld) jdkProxyExample.blind(<span class="keyword">new</span> HelloWorldImpl());</span><br><span class="line">        <span class="comment">//此时HelloWorld已经是一个代理对象，会进入代理的逻辑</span></span><br><span class="line">        proxy.sayHelloWorld();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+测试结果<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sun.misc.Launcher$AppClassLoader@<span class="number">18</span>b4aac2</span><br><span class="line">进入代理逻辑方法</span><br><span class="line">在调度真是对象之前的服务</span><br><span class="line">Hello world</span><br><span class="line">在调度真实对象之后的服务</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<img src="/images/截屏2020-01-08下午6.00.46.png">
+原理：
+newProxyInstance()源码中有这几段，其实大概就是把接口clone，通过这些接口和类加载器，拿到这个代理类cl。然后通过反射的技术拿到代理类的构造函数（这部分代码在Class类中的getConstructor方法），同时用InvocationHandler绑定这个对象，最后通过这个构造函数new个一对象出来。
+
+
+<ol start="2">
+<li>cglib动态代理</li>
+</ol>
+<p>CGLIB是一个功能强大的，高级，有效的代码生成库，用于在运行期扩展Java类和实现Java接口。<br>它与JDK的动态代理的之间最大的区别就是：<br>JDK动态代理是针对接口的，而cglib是针对类来实现代理的<br>实例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CglibProxyExample</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object o, Method method, Object[] objects, MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"进入代理逻辑方法"</span>);</span><br><span class="line">        System.out.println(<span class="string">"在调度真是对象之前的服务"</span>);</span><br><span class="line">        Object obj = methodProxy.invokeSuper(o, objects);</span><br><span class="line">        System.out.println(<span class="string">"在调度真实对象之后的服务"</span>);</span><br><span class="line">        <span class="keyword">return</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">测试：</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">        enhancer.setSuperclass(HelloWorldImpl<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        enhancer.setCallback(<span class="keyword">new</span> CglibProxyExample());</span><br><span class="line">        HelloWorldImpl proxy = (HelloWorldImpl)enhancer.create();</span><br><span class="line">        proxy.sayHelloWorld();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">进入代理逻辑方法</span><br><span class="line">在调度真是对象之前的服务</span><br><span class="line">Hello world</span><br><span class="line">在调度真实对象之后的服务</span><br></pre></td></tr></table></figure>
+
+<p>cglib的原理是：<br>对指定的目标类生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/07/MapStruct/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -577,7 +670,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -590,7 +683,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
