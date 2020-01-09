@@ -48,20 +48,20 @@
   };
 </script>
 
-  <meta name="description" content="hello，这是我的第一个博客  因为之前早就把springboot在使用层面学完了，最近打算将springboot的一些特性原理以及核心源码再次学习一遍，所谓知其然知其所以然。">
+  <meta name="description" content="学而不思则罔思而不学则殆，害，最近也不知道怎么了懒惰的我竟然稍微有点勤奋起来，哈哈哈哈哈哈学习使我快乐（说出来我自己都不信）上一篇写了同步的5种方法，突然ThreadLocal是咋实现的？？主要看里面这几个方法void set(Object value) 设置当前线程的线程局部变量的值。public Object get() 该方法返回当前线程所对应的线程局部变量。public void remo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring一些理解">
-<meta property="og:url" content="http://yoursite.com/2020/01/01/SpringBoot%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:title" content="ThreadLocal原理分析及应用">
+<meta property="og:url" content="http://yoursite.com/2020/01/09/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8A%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="zhuzhu&#39;blogs">
-<meta property="og:description" content="hello，这是我的第一个博客  因为之前早就把springboot在使用层面学完了，最近打算将springboot的一些特性原理以及核心源码再次学习一遍，所谓知其然知其所以然。">
+<meta property="og:description" content="学而不思则罔思而不学则殆，害，最近也不知道怎么了懒惰的我竟然稍微有点勤奋起来，哈哈哈哈哈哈学习使我快乐（说出来我自己都不信）上一篇写了同步的5种方法，突然ThreadLocal是咋实现的？？主要看里面这几个方法void set(Object value) 设置当前线程的线程局部变量的值。public Object get() 该方法返回当前线程所对应的线程局部变量。public void remo">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-01T14:26:03.000Z">
-<meta property="article:modified_time" content="2020-01-08T07:22:16.750Z">
+<meta property="article:published_time" content="2020-01-09T10:15:46.000Z">
+<meta property="article:modified_time" content="2020-01-09T10:36:56.715Z">
 <meta property="article:author" content="zhuzhu">
-<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2020/01/01/SpringBoot%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/">
+<link rel="canonical" href="http://yoursite.com/2020/01/09/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8A%E5%BA%94%E7%94%A8/">
 
 
 <script id="page-configurations">
@@ -73,7 +73,7 @@
   };
 </script>
 
-  <title>Spring一些理解 | zhuzhu'blogs</title>
+  <title>ThreadLocal原理分析及应用 | zhuzhu'blogs</title>
   
 
 
@@ -191,7 +191,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/01/SpringBoot%E4%B8%80%E4%BA%9B%E7%90%86%E8%A7%A3/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/09/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8A%E5%BA%94%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/zhuzhu.jpeg">
@@ -204,7 +204,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Spring一些理解
+          ThreadLocal原理分析及应用
         </h1>
 
         <div class="post-meta">
@@ -213,24 +213,18 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-01-01 22:26:03" itemprop="dateCreated datePublished" datetime="2020-01-01T22:26:03+08:00">2020-01-01</time>
+              <time title="创建时间：2020-01-09 18:15:46 / 修改时间：18:36:56" itemprop="dateCreated datePublished" datetime="2020-01-09T18:15:46+08:00">2020-01-09</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-08 15:22:16" itemprop="dateModified" datetime="2020-01-08T15:22:16+08:00">2020-01-08</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/SpringBoot/" itemprop="url" rel="index">
-                    <span itemprop="name">SpringBoot</span>
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
                   </a>
                 </span>
             </span>
@@ -246,10 +240,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>  hello，这是我的第一个博客<br>  因为之前早就把springboot在使用层面学完了，最近打算将springboot的一些特性原理以及核心源码再次学习一遍，所谓知其然知其所以然。</p>
+        <p>学而不思则罔思而不学则殆，害，最近也不知道怎么了懒惰的我竟然稍微有点勤奋起来，哈哈哈哈哈哈学习使我快乐（说出来我自己都不信）<br>上一篇写了同步的5种方法，突然ThreadLocal是咋实现的？？<br>主要看里面这几个方法<br>void set(Object value) 设置当前线程的线程局部变量的值。<br>public Object get() 该方法返回当前线程所对应的线程局部变量。<br>public void remove() 将当前线程局部变量的值删除。<br>protected Object initialValue() 返回该线程局部变量的初始值，该方法是一个protected的方法，显然是为了让子类覆盖而设计的。</p>
 <a id="more"></a>
-<p>  当然spring十分强大，这些代码要完成任务需要很多琐碎的类实现，比如读取某个包下面的所有类，解析class的头文件,反射各种信息，再加上封装，很有可能在读源码的过程中掉到各种细节里出不来，大家读源码不用事无巨细，理解原理即可，官方文档是最好的老师。<br>  第一篇就把自己所理解的spring原理记录一下。</p>
-<p>  spring基本原理其实就是通过反射解析类及其类的各种信息，包括构造器、方法及其参数，属性。然后将其封装成bean定义信息类、constructor信息类、method信息类、property信息类，最终放在一个map里，也就是所谓的container，池等等，其实就是个map。当你写好配置文件，启动项目后，框架会先按照你的配置文件找到那个要扫描的包，然后解析包里面的所有类，找到所有含有@bean，@service等注解的类，利用反射解析它们，包括解析构造器，方法，属性等等，然后封装成各种信息类放到一个map里。每当你需要一个bean的时候，框架就会从container找是不是有这个类的定义啊？如果找到则通过构造器new出来（这就是控制反转，不用你new,框架帮你new），再在这个类找是不是有要注入的属性或者方法，比如标有@autowired的属性，如果有则还是到container找对应的解析类，new出对象，并通过之前解析出来的信息类找到setter方法，然后用该方法注入对象（这就是依赖注入）。如果其中有一个类container里没找到，则抛出异常，比如常见的spring无法找到该类定义异常。还有就是嵌套bean则用了一下递归，container会放到servletcontext里面，每次reQuest从servletcontext找这个container即可，不用多次解析类定义。如果bean的类型范围是单例，则会重用这个bean不再重新创建，将这个bean放到一个map里，每次用都先从这个map里面找。如果类型范围是session，则该bean会放到session里面。</p>
+
+<p>首先ThreadLocal内部有个ThreadLocalMap内部类，ThreadLocalMap内部有个Entry内部类。<br>先介绍一下ThreadLocalMap和ThreadLocalMap.Entry内部类： ThreadLocalMap实际上也就是一个为ThreadLocal服务的自定义的hashmap类 。Entry是一个继承WeakReference类的类，也就是ThreadLocalMap这个hashmap中的每项，并且Entry中的键都是ThreadLocal。</p>
+<p>再下来我们看下线程线程类： 线程线程类内部有个ThreadLocal.ThreadLocalMap类型的属性：<br>/* ThreadLocal values pertaining to this thread. This map is maintained</p>
+<ul>
+<li>by the ThreadLocal class. */<br>ThreadLocal.ThreadLocalMap threadLocals = null;<br>下面重点来看ThreadLocal类的源码：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 得到当前线程</span></span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    <span class="comment">// 拿到当前线程的ThreadLocalMap对象</span></span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 找到该ThreadLocal对应的Entry</span></span><br><span class="line">        ThreadLocalMap.Entry e = map.getEntry(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">            T result = (T)e.value;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 当前线程没有ThreadLocalMap对象的话，那么就初始化ThreadLocalMap</span></span><br><span class="line">    <span class="keyword">return</span> setInitialValue();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> T <span class="title">setInitialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 初始化ThreadLocalMap，默认返回null，可由子类扩展</span></span><br><span class="line">    T value = initialValue();</span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>)</span><br><span class="line">        <span class="comment">// 实例化ThreadLocalMap之后，将初始值丢入到Map中</span></span><br><span class="line">        map.set(<span class="keyword">this</span>, value);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        createMap(t, value);</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">createMap</span><span class="params">(Thread t, T firstValue)</span> </span>&#123;</span><br><span class="line">    t.threadLocals = <span class="keyword">new</span> ThreadLocalMap(<span class="keyword">this</span>, firstValue);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(T value)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// set逻辑：找到当前线程的ThreadLocalMap，找到的话，设置对应的值，否则创建ThreadLocalMap</span></span><br><span class="line">    Thread t = Thread.currentThread();</span><br><span class="line">    ThreadLocalMap map = getMap(t);</span><br><span class="line">    <span class="keyword">if</span> (map != <span class="keyword">null</span>)</span><br><span class="line">        map.set(<span class="keyword">this</span>, value);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        createMap(t, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+综合而言：使用synchronized是一种“以时间换空间”的概念，而使用ThreadLocal则是“以空间换时间”的概念。<br>ThreadLocal应用场景更多是共享一个变量，每个线程需要有自己单独的实例实例需要在多个方法中共享，但不希望被多线程共享</li>
+</ul>
 
     </div>
 
@@ -259,7 +258,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Spring/" rel="tag"># Spring</a>
+              <a href="/tags/java/" rel="tag"># java</a>
           </div>
 
         
@@ -268,13 +267,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2019/12/31/hello/" rel="prev" title="hello">
-      <i class="fa fa-chevron-left"></i> hello
+    <a href="/2020/01/09/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" rel="prev" title="线程同步">
+      <i class="fa fa-chevron-left"></i> 线程同步
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/01/05/%E6%B3%A8%E8%A7%A3-SpringApplication/" rel="next" title="注解@SpringApplication">
-      注解@SpringApplication <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
