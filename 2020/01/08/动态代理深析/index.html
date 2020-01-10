@@ -21,7 +21,7 @@
 <script id="hexo-configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    hostname: new URL('http://yoursite.com').hostname,
+    hostname: new URL('https://zhuzhu1001.github.io').hostname,
     root: '/',
     scheme: 'Mist',
     version: '7.7.0',
@@ -51,19 +51,19 @@
   <meta name="description" content="这几天看源码的过程中发现动态代理用得非常多。在Spring项目中用的注解，例如依赖注入的@Bean、@Autowired，事务注解@Transactional等都有用到，就是Srping的AOP（切面编程）。之前虽然是学过，但是感觉从来没用过，很模糊，所以就有了这篇文章代理可以让调用者和实现者之间解耦，例如RPC调用，对于我们调用者来说我就是想对用远程的那个方法，对于内部寻址啊，序列化反序列化等等">
 <meta property="og:type" content="article">
 <meta property="og:title" content="动态代理深析">
-<meta property="og:url" content="http://yoursite.com/2020/01/08/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%B7%B1%E6%9E%90/index.html">
+<meta property="og:url" content="https://zhuzhu1001.github.io/2020/01/08/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%B7%B1%E6%9E%90/index.html">
 <meta property="og:site_name" content="zhuzhu&#39;blogs">
 <meta property="og:description" content="这几天看源码的过程中发现动态代理用得非常多。在Spring项目中用的注解，例如依赖注入的@Bean、@Autowired，事务注解@Transactional等都有用到，就是Srping的AOP（切面编程）。之前虽然是学过，但是感觉从来没用过，很模糊，所以就有了这篇文章代理可以让调用者和实现者之间解耦，例如RPC调用，对于我们调用者来说我就是想对用远程的那个方法，对于内部寻址啊，序列化反序列化等等">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/images/%E6%88%AA%E5%B1%8F2020-01-08%E4%B8%8B%E5%8D%886.00.46.png">
+<meta property="og:image" content="https://zhuzhu1001.github.io/images/%E6%88%AA%E5%B1%8F2020-01-08%E4%B8%8B%E5%8D%886.00.46.png">
 <meta property="article:published_time" content="2020-01-08T12:38:45.000Z">
 <meta property="article:modified_time" content="2020-01-08T12:52:35.846Z">
 <meta property="article:author" content="zhuzhu">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/images/%E6%88%AA%E5%B1%8F2020-01-08%E4%B8%8B%E5%8D%886.00.46.png">
+<meta name="twitter:image" content="https://zhuzhu1001.github.io/images/%E6%88%AA%E5%B1%8F2020-01-08%E4%B8%8B%E5%8D%886.00.46.png">
 
-<link rel="canonical" href="http://yoursite.com/2020/01/08/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%B7%B1%E6%9E%90/">
+<link rel="canonical" href="https://zhuzhu1001.github.io/2020/01/08/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%B7%B1%E6%9E%90/">
 
 
 <script id="page-configurations">
@@ -193,7 +193,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/08/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%B7%B1%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="https://zhuzhu1001.github.io/2020/01/08/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%B7%B1%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/zhuzhu.jpeg">
