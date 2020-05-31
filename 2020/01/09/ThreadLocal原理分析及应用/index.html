@@ -50,16 +50,16 @@
   };
 </script>
 
-  <meta name="description" content="学而不思则罔思而不学则殆，害，最近也不知道怎么了懒惰的我竟然稍微有点勤奋起来，哈哈哈哈哈哈学习使我快乐（说出来我自己都不信）上一篇写了同步的5种方法，突然ThreadLocal是咋实现的？？主要看里面这几个方法void set(Object value) 设置当前线程的线程局部变量的值。public Object get() 该方法返回当前线程所对应的线程局部变量。public void remo">
+  <meta name="description" content="学而不思则罔思而不学则殆ThreadLocal是怎么实现的主要看里面这几个方法void set(Object value) 设置当前线程的线程局部变量的值。public Object get() 该方法返回当前线程所对应的线程局部变量。public void remove() 将当前线程局部变量的值删除。protected Object initialValue() 返回该线程局部变量的初始值，该">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ThreadLocal原理分析及应用">
 <meta property="og:url" content="https://zhuzhu1001.github.io/2020/01/09/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8A%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="zhuzhu&#39;blogs">
-<meta property="og:description" content="学而不思则罔思而不学则殆，害，最近也不知道怎么了懒惰的我竟然稍微有点勤奋起来，哈哈哈哈哈哈学习使我快乐（说出来我自己都不信）上一篇写了同步的5种方法，突然ThreadLocal是咋实现的？？主要看里面这几个方法void set(Object value) 设置当前线程的线程局部变量的值。public Object get() 该方法返回当前线程所对应的线程局部变量。public void remo">
+<meta property="og:description" content="学而不思则罔思而不学则殆ThreadLocal是怎么实现的主要看里面这几个方法void set(Object value) 设置当前线程的线程局部变量的值。public Object get() 该方法返回当前线程所对应的线程局部变量。public void remove() 将当前线程局部变量的值删除。protected Object initialValue() 返回该线程局部变量的初始值，该">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zhuzhu1001.github.io/images/%E6%88%AA%E5%B1%8F2020-01-09%E4%B8%8B%E5%8D%882.04.19.png">
 <meta property="article:published_time" content="2020-01-09T10:15:46.000Z">
-<meta property="article:modified_time" content="2020-01-09T15:20:01.292Z">
+<meta property="article:modified_time" content="2020-05-31T09:19:07.884Z">
 <meta property="article:author" content="zhuzhu">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
@@ -217,10 +217,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-01-09 18:15:46 / 修改时间：23:20:01" itemprop="dateCreated datePublished" datetime="2020-01-09T18:15:46+08:00">2020-01-09</time>
+              <time title="创建时间：2020-01-09 18:15:46" itemprop="dateCreated datePublished" datetime="2020-01-09T18:15:46+08:00">2020-01-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-31 17:19:07" itemprop="dateModified" datetime="2020-05-31T17:19:07+08:00">2020-05-31</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -265,7 +271,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>学而不思则罔思而不学则殆，害，最近也不知道怎么了懒惰的我竟然稍微有点勤奋起来，哈哈哈哈哈哈学习使我快乐（说出来我自己都不信）<br>上一篇写了同步的5种方法，突然ThreadLocal是咋实现的？？<br>主要看里面这几个方法<br>void set(Object value) 设置当前线程的线程局部变量的值。<br>public Object get() 该方法返回当前线程所对应的线程局部变量。<br>public void remove() 将当前线程局部变量的值删除。<br>protected Object initialValue() 返回该线程局部变量的初始值，该方法是一个protected的方法，显然是为了让子类覆盖而设计的。</p>
+        <p>学而不思则罔思而不学则殆<br>ThreadLocal是怎么实现的<br>主要看里面这几个方法<br>void set(Object value) 设置当前线程的线程局部变量的值。<br>public Object get() 该方法返回当前线程所对应的线程局部变量。<br>public void remove() 将当前线程局部变量的值删除。<br>protected Object initialValue() 返回该线程局部变量的初始值，该方法是一个protected的方法，显然是为了让子类覆盖而设计的。</p>
 <a id="more"></a>
 <img src="/images/截屏2020-01-09下午2.04.19.png">
 首先ThreadLocal内部有个ThreadLocalMap内部类，ThreadLocalMap内部有个Entry内部类。
