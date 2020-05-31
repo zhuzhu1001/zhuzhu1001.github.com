@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zhuzhu1001.github.io/about/index.html</loc>
+    
+    <lastmod>2020-05-31T08:19:14.375Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zhuzhu1001.github.io/2020/01/15/SpringBoot%E7%9A%84%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86/</loc>
     
     <lastmod>2020-01-15T03:15:53.557Z</lastmod>
@@ -61,13 +68,6 @@
     <loc>https://zhuzhu1001.github.io/2020/01/07/MapStruct/</loc>
     
     <lastmod>2020-01-08T06:54:10.136Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhuzhu1001.github.io/about/index.html</loc>
-    
-    <lastmod>2020-01-07T12:56:18.150Z</lastmod>
     
   </url>
   
