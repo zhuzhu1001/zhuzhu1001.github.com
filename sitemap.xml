@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zhuzhu1001.github.io/2020/05/31/spring/</loc>
+    
+    <lastmod>2020-05-31T08:39:40.586Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://zhuzhu1001.github.io/2020/01/05/%E6%B3%A8%E8%A7%A3-SpringApplication/</loc>
+    
+    <lastmod>2020-05-31T08:25:27.918Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://zhuzhu1001.github.io/about/index.html</loc>
     
     <lastmod>2020-05-31T08:19:14.375Z</lastmod>
@@ -16,23 +30,9 @@
   </url>
   
   <url>
-    <loc>https://zhuzhu1001.github.io/2020/01/05/%E6%B3%A8%E8%A7%A3-SpringApplication/</loc>
-    
-    <lastmod>2020-01-14T07:54:52.784Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://zhuzhu1001.github.io/2020/01/14/%E8%87%AA%E5%AE%9A%E4%B9%89starter/</loc>
     
     <lastmod>2020-01-14T07:54:45.952Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://zhuzhu1001.github.io/baidu_verify_sHuBj2xVPx.html</loc>
-    
-    <lastmod>2020-01-11T04:09:08.089Z</lastmod>
     
   </url>
   

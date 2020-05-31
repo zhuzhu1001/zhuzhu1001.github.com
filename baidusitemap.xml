@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zhuzhu1001.github.io/2020/01/15/SpringBoot%E7%9A%84%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86/</loc>
-    <lastmod>2020-01-15</lastmod>
+    <loc>https://zhuzhu1001.github.io/2020/05/31/spring/</loc>
+    <lastmod>2020-05-31</lastmod>
   </url>  <url>
     <loc>https://zhuzhu1001.github.io/2020/01/05/%E6%B3%A8%E8%A7%A3-SpringApplication/</loc>
-    <lastmod>2020-01-14</lastmod>
+    <lastmod>2020-05-31</lastmod>
+  </url>  <url>
+    <loc>https://zhuzhu1001.github.io/2020/01/15/SpringBoot%E7%9A%84%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2020-01-15</lastmod>
   </url>  <url>
     <loc>https://zhuzhu1001.github.io/2020/01/14/%E8%87%AA%E5%AE%9A%E4%B9%89starter/</loc>
     <lastmod>2020-01-14</lastmod>
